@@ -1,0 +1,7 @@
+#! /bin/env python
+from pynvim import attach
+from sys import argv
+from os import environ
+
+nvim = attach('socket', path=environ['NVIM_LISTEN_ADDRESS'])
+nvim.command(' '.join(argv[1:]))
