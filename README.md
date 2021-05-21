@@ -1,13 +1,14 @@
-===============================================================================
-            VTT | Vim Terminal Tweaks | Virtual Terminal Tranquility
-===============================================================================
+# VTT | Vim Terminal Tweaks | Virtual Terminal Tranquility
 
-INTRODUCTION
+## INTRODUCTION
 
-Tries to fix some weirdness in |:terminal|. In particular when using |nvim|
+Tries to fix some weirdness in `:terminal` (in particular when using `nvim`)
 and provides a simple working dir syncing tool (bash+python+nvim)
 
-INSTALLATION
+In its current state it feels stable enough to use nvim as
+my main terminal emulator.
+
+## INSTALLATION
 
 `Plugin 'frizinak/vtt'`
 
