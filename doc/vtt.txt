@@ -1,0 +1,112 @@
+*vtt.txt*
+
+Last Change May 21 2021
+Author:  Kobe Lipkens
+
+                                                                 *vtt* *vtt-vim*
+===============================================================================
+            VTT | Vim Terminal Tweaks | Virtual Terminal Tranquility
+===============================================================================
+
+INTRODUCTION                                                         *vtt-intro*
+
+Tries to fix some weirdness in |:terminal|. In particular when using |nvim|
+
+ - Forced cursor, no focus loss indication.
+ - set |modified| does absolutely nothing. Works correctly in VIM
+ - Don't (easily) allow quiting a terminal session.
+ - ...
+
+SUGGESTED USAGE                                            *vtt-suggested-usage*
+
+Launch (n)vim with '+Term'
+
+in your |$MYVIMRC|: ($YOURVIMRC ?)
+```
+noremap S :BottomTerm<cr>
+let g:vtt_map_escesc = 1
+let g:vtt_no_kill_term = 1
+
+fun VTTOnTermBuffer()
+    setlocal norelativenumber
+    setlocal nonumber
+    setlocal laststatus=0
+    setlocal bufhidden="hide"
+    setlocal hidden
+endfun
+
+fun VTTOnNonTermBuffer()
+    setlocal relativenumber
+    setlocal laststatus=2
+    setlocal number
+endfun
+```
+
+GLOBAL VARIABLES                             *vtt-configuration* *vtt-variables*
+
+                                                                   *g:vtt_shell*
+Default: current $SHELL
+
+Set the command to run when spawning a new terminal.
+
+                                                      *g:vtt_bottom_term_height*
+Default: 15
+
+Used as the initial height of the |vtt#BottomTerm()| in number of lines.
+
+                                                     *g:vtt_fix_inactive_cursor*
+
+Neovim only
+Default: 1
+
+Stop insert mode when terminal loses focus, which allows your terminal to
+indicate this loss of focus with a different cursor.
+
+                                                              *g:vtt_map_escesc*
+
+Default: 0
+
+Map <Esc><Esc> to leave terminal insert mode.
+
+                                                            *g:vtt_no_kill_term*
+Neovim only
+Default: 0
+
+Dirty fix to prevent :q :qa and :wq to quit this vim session when a terminal
+is still running.
+
+                                                          *g:vtt_on_term_buffer*
+
+Default: |VTTOnTermBuffer|
+
+A callback in which you can customize buffer options for the terminal buffer.
+Or alternatively implement |VTTOnTermBuffer()|.
+
+                                                      *g:vtt_on_non_term_buffer*
+
+Default: |VTTOnNonTermBuffer|
+
+a callback in which you can reset options set in g:vtt_on_term_buffer.
+Or alternatively implement |VTTOnNonTermBuffer()|.
+
+CALLBACKS                                                        *vtt-callbacks*
+
+                                                               *VTTOnTermBuffer*
+
+Will be called when the current buffer is a terminal.
+
+                                                            *VTTOnNonTermBuffer*
+
+Will be callend when the current buffer is not a terminal.
+
+FUNCTIONS AND COMMANDS                            *vtt-commands* *vtt-functions*
+
+                                                                    *vtt#Term()*
+:Term                Start a terminal in the current buffer or, if one already
+                     exists, switch to its buffer.
+
+                                                              *vtt#BottomTerm()*
+
+:BottomTerm          Create a bottom split and load
+                     the terminal buffer into it.
+
