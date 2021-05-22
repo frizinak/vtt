@@ -38,7 +38,7 @@ fun s:term()
 endfun
 
 " Start a terminal or switch to an old one
-fun vtt#Term()
+fun vtt#Term(exe)
     if (&buftype == 'terminal')
         return
     endif
@@ -50,6 +50,10 @@ fun vtt#Term()
     endif
 
     let l:exe = get(g:, 'vtt_shell', $SHELL)
+    if a:exe != ''
+        let l:exe = a:exe
+    endif
+
     if has('nvim')
         call termopen(l:exe, {'on_exit': function('s:onTermExit')})
         let g:vtt_buf = bufname()
@@ -64,7 +68,7 @@ fun vtt#BottomTerm()
     if &buftype == 'terminal'
         return
     endif
-    exe ':botright ' get(g:, 'vtt_bottom_term_height', 15) 'split +call\ vtt#Term\(\)'
+    exe ':botright ' get(g:, 'vtt_bottom_term_height', 15) 'split +call\ vtt#Term\(""\)'
 endfun
 
 fun s:wq()
@@ -117,7 +121,7 @@ autocmd BufEnter,BufFilePost * call s:setTerm()
 " Stops insert mode and restores it when we gain focus again.
 if has('nvim') && get(g:, 'vtt_fix_inactive_cursor', 1)
     let s:toggleInsert=0
-    autocmd FocusLost * let s:toggleInsert=0 | let s:m = mode() | if s:m == 'i' || s:m == 't' | stopinsert | let s:toggleInsert=1 | endif
+    autocmd FocusLost * let s:toggleInsert=0 | echo mode() | let s:m = mode() | if s:m == 'i' || s:m == 't' | stopinsert | let s:toggleInsert=1 | endif
     autocmd FocusGained * if s:toggleInsert | startinsert | endif
 endif
 

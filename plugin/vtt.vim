@@ -5,7 +5,7 @@ endif
 let g:loaded_vim_terminal_tweaks = 1
 
 if !exists(':Term')
-    command Term call vtt#Term()
+    command -nargs=? Term call vtt#Term('<args>')
 endif
 
 if !exists(':BottomTerm')
