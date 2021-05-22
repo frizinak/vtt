@@ -120,9 +120,26 @@ autocmd BufEnter,BufFilePost * call s:setTerm()
 " Fixes inactive cursor if your term supports it.
 " Stops insert mode and restores it when we gain focus again.
 if has('nvim') && get(g:, 'vtt_fix_inactive_cursor', 1)
-    let s:toggleInsert=0
-    autocmd FocusLost * let s:toggleInsert=0 | echo mode() | let s:m = mode() | if s:m == 'i' || s:m == 't' | stopinsert | let s:toggleInsert=1 | endif
-    autocmd FocusGained * if s:toggleInsert | startinsert | endif
+    let s:insert = mode() == 'i' || mode() == 't'
+    let s:leaving = 0
+
+    autocmd InsertEnter,TermEnter * let s:insert = 1
+
+    autocmd InsertLeave,TermLeave * if (!s:leaving)       |
+                                  \     let s:insert = 0  |
+                                  \ endif                 |
+                                  \ let s:leaving = 0
+
+    autocmd FocusGained           * if s:insert           |
+                                  \     startinsert       |
+                                  \ endif
+
+    autocmd FocusLost             * stopinsert            |
+                                  \ if (s:insert)         |
+                                  \     let s:leaving = 1 |
+                                  \     stopinsert        |
+                                  \ endif
+
 endif
 
 if has('nvim') && get(g:, 'vtt_no_kill_term', 0)

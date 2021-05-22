@@ -15,4 +15,3 @@ endif
 if get(g:, 'vtt_map_escesc', 0) && exists(':tnoremap')
     tnoremap <Esc><Esc> <C-\><C-n>
 endif
-
