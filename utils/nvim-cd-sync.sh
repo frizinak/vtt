@@ -23,4 +23,6 @@ __vtt_nvim_cd_sync_init() {
     export PROMPT_COMMAND=__vtt_nvim_cd_sync_prompt_wrapper
 }
 
-__vtt_nvim_cd_sync_init
+if [ ! -z $NVIM_LISTEN_ADDRESS ]; then
+    __vtt_nvim_cd_sync_init
+fi
