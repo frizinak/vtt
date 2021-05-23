@@ -123,22 +123,24 @@ if has('nvim') && get(g:, 'vtt_fix_inactive_cursor', 1)
     let s:insert = mode() == 'i' || mode() == 't'
     let s:leaving = 0
 
-    autocmd InsertEnter,TermEnter * let s:insert = 1
+    autocmd TermEnter   * let s:insert = 1
 
-    autocmd InsertLeave,TermLeave * if (!s:leaving)       |
-                                  \     let s:insert = 0  |
-                                  \ endif                 |
-                                  \ let s:leaving = 0
+    autocmd TermLeave   * if (!s:leaving)       |
+                        \     let s:insert = 0  |
+                        \ endif                 |
+                        \ let s:leaving = 0
 
-    autocmd FocusGained           * if s:insert           |
-                                  \     startinsert       |
-                                  \ endif
+    autocmd FocusGained * if s:insert           |
+                        \     startinsert       |
+                        \ endif
 
-    autocmd FocusLost             * stopinsert            |
-                                  \ if (s:insert)         |
-                                  \     let s:leaving = 1 |
-                                  \     stopinsert        |
-                                  \ endif
+    autocmd FocusLost   * if &buftype == 'terminal' |
+                        \     stopinsert            |
+                        \     if (s:insert)         |
+                        \         let s:leaving = 1 |
+                        \         stopinsert        |
+                        \     endif                 |
+                        \ endif
 
 endif
 
