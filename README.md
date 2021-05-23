@@ -19,3 +19,45 @@ For cwd syncing:
     `vtt_dir="$HOME/.config/nvim/bundle/vtt";`
     `source "$vtt_dir/utils/nvim-cd-sync.sh";`
 
+To prevent nesting vim instances:
+
+    `EDITOR=$HOME/.config/nvim/bundle/vtt/utils/nvim-cmd edit-wait`
+
+    or add an executable bash script to your path like:
+
+    ```
+    #! /bin/env sh
+
+    if [ -z $NVIM_LISTEN_ADDRESS ]; then
+        /usr/bin/nvim "$@"
+        exit $?
+    fi
+
+    "$HOME/.vim/vtt/utils/nvim-cmd" edit-wait "$1"
+    ```
+
+## SUGGESTED USAGE
+
+Launch (n)vim with '+Term'
+
+in your `$MYVIMRC`: ($YOURVIMRC ?)
+```
+noremap S :BottomTerm<cr>
+let g:vtt_map_escesc = 1
+let g:vtt_no_kill_term = 1
+
+fun VTTOnTermBuffer()
+    setlocal norelativenumber
+    setlocal nonumber
+    setlocal laststatus=0
+    setlocal bufhidden="hide"
+    setlocal hidden
+endfun
+
+fun VTTOnNonTermBuffer()
+    setlocal relativenumber
+    setlocal laststatus=2
+    setlocal number
+endfun
+```
+

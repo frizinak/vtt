@@ -1,7 +1,66 @@
 #! /bin/env python
 from pynvim import attach
-from sys import argv
+from sys import argv, exit
 from os import environ
 
-nvim = attach('socket', path=environ['NVIM_LISTEN_ADDRESS'])
-nvim.command(' '.join(argv[1:]))
+def run(nvim, args):
+    cmd = args[0]
+    args = args[1:]
+    edit = "edit"
+    if cmd == "vsplit" or cmd == "split":
+        if len(args) == 0:
+            print("no command to run in a split")
+            return 1
+
+        edit = cmd
+        cmd = args[0]
+        args = args[1:]
+
+    if cmd == "edit" or cmd == "cd":
+        if len(args) != 1:
+            print("no path given")
+            return 1
+
+        if cmd == "edit":
+            cmd = edit
+        elif cmd == "cd":
+            cmd = "silent cd"
+        path = nvim.funcs.fnameescape(args[0])
+        nvim.command("{} {}".format(cmd, path))
+
+    elif cmd == "edit-wait":
+        if len(args) != 1:
+            print("no path given")
+            return 1
+
+        ev = "nvimcmd-close"
+        path = nvim.funcs.fnameescape(args[0])
+        nvim.command("{} {}".format(edit, path))
+        nvim.command(
+            "au BufDelete <buffer> ++once call rpcnotify({}, '{}')"
+            .format(nvim.channel_id, ev)
+        )
+
+        while True:
+            data = nvim.next_message()
+            if data != None and data[0] == 'notification' and data[1] == ev:
+                break
+
+    else:
+        print("invalid command")
+        return 1
+
+def main():
+    args = argv[1:]
+    if len(args) < 1:
+        print("no command to run")
+        return 1
+
+    nvim = attach('socket', path=environ['NVIM_LISTEN_ADDRESS'])
+    ex = run(nvim, args)
+    nvim.close()
+    exit(ex)
+
+
+if __name__ == '__main__':
+    main()

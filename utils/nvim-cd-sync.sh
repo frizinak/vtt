@@ -2,7 +2,7 @@
 
 __vtt_nvim_cd_sync_prompt_wrapper () {
     if [ "$PWD" != "$old_pwd" ]; then
-        "$vtt_nvimcmd" "exe 'cd' fnameescape('$PWD')"
+        "$vtt_nvimcmd" cd "$PWD"
     fi
     old_pwd="$PWD"
     "$old_prompt"

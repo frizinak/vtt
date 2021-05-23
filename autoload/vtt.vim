@@ -101,10 +101,6 @@ fun vtt#abbrev(cmd)
         return '%bd'
     endif
 
-    if winnr('$') > 1
-        return 'q'
-    endif
-
     return 'bd'
 endfun
 
