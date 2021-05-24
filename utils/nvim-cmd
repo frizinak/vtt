@@ -23,10 +23,8 @@ def run(nvim, args):
 
         if cmd == "edit":
             cmd = edit
-        elif cmd == "cd":
-            cmd = "silent cd"
         path = nvim.funcs.fnameescape(args[0])
-        nvim.command("{} {}".format(cmd, path))
+        nvim.command("silent! {} {}".format(cmd, path))
 
     elif cmd == "edit-wait":
         if len(args) != 1:
@@ -35,7 +33,7 @@ def run(nvim, args):
 
         ev = "nvimcmd-close"
         path = nvim.funcs.fnameescape(args[0])
-        nvim.command("{} {}".format(edit, path))
+        nvim.command("silent! {} {}".format(edit, path))
         nvim.command(
             "au BufDelete <buffer> ++once call rpcnotify({}, '{}')"
             .format(nvim.channel_id, ev)
