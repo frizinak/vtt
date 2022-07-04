@@ -28,7 +28,7 @@ To prevent nesting vim instances:
     ```
     #! /bin/env sh
 
-    if [ -z $NVIM_LISTEN_ADDRESS ]; then
+    if [ -z $NVIM ]; then
         /usr/bin/nvim "$@"
         exit $?
     fi

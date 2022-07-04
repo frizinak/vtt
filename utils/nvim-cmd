@@ -54,7 +54,7 @@ def main():
         print("no command to run")
         return 1
 
-    nvim = attach('socket', path=environ['NVIM_LISTEN_ADDRESS'])
+    nvim = attach('socket', path=environ['NVIM'])
     ex = run(nvim, args)
     nvim.close()
     exit(ex)
